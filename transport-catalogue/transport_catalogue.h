@@ -3,10 +3,10 @@
 #include "geo.h"
 #include <deque>
 #include <iostream>
+#include <set> 
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <set>
 
 using namespace std::string_literals;
 using namespace std::string_view_literals;
@@ -14,15 +14,14 @@ using namespace std::string_view_literals;
 // класс транспортного справочника
 
 // Содержит информацию об остановке: название и координаты (широта и долгота)
-struct Stop {
+struct Stop { 
 	std::string name;
 	detail::Coordinates coords;
-	std::set<std::string> buses;
 };
 
-struct Bus {
+struct Bus { 
 	std::string name;
-	std::vector<std::string> stops;
+	std::vector<Stop*> stops;
 	bool is_looped;
 };
 
@@ -41,30 +40,31 @@ struct BusInfo {
 
 class TransportCatalogue {
 public:
-	void PushBus(const std::string& name, const std::vector<std::string>& stops, const bool is_looped);
+	void PushBus(const std::string& name, const std::vector<Stop*>& stops, const bool is_looped);
 
 	void PushStop(const std::string& name, const detail::Coordinates& coordinates);
 
-	const Bus* FindBus(const std::string& name) const;
+	const Bus* FindBus(const std::string_view name) const;
 
-	const Stop* FindStop(const std::string& name) const;
+	const Stop* FindStop(const std::string_view name) const;
 
-	const BusInfo GetBusInfo(const Bus* current_bus) const;
+	const BusInfo GetBusInfo(const Bus* current_bus) const; 
 
-	const std::set<std::string>& GetBusesOnStop(const std::string& name) const;
-
-
+	const std::set<Bus*> GetBusesForStop(const std::string& name) const;
 
 private:
 	// База данных остановок: name=название_остановки, coords={широта, долгота}
 	std::deque<Stop> stops_;
 
 	// Хранит <название_остановки <название_остановки, координаты_остановки>>
-	std::unordered_map<std::string, const Stop*> stopname_to_stop_;
+	std::unordered_map<std::string_view, const Stop*> stopname_to_stop_;
 
 	// База данных автобусов: name - имя автобуса, stops - вектор его остановок
 	std::deque<Bus> buses_;
 
 	// Хранит <название_остановки <название_остановки, координаты_остановки>>
-	std::unordered_map<std::string, const Bus*> busname_to_bus_;
+	std::unordered_map<std::string_view, const Bus*> busname_to_bus_;
+
+	// Хранит название остановки и автобусы, которые посещают эту остановку
+	std::unordered_map<std::string, std::set<Bus*>> stop_buses_;
 };
