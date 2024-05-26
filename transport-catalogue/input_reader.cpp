@@ -101,17 +101,15 @@ void Parse::InputReader::Line(std::string_view line) {
         commands_.push_back(std::move(command_description));
     }
 }
-void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
-    // Сначала обрабатываем команды Stop
+void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const { 
     for (const auto& command : commands_) {
         if (command.command == "Stop") {
             auto coords = Parse::Coordinates(command.description);
             catalogue.PushStop(command.id, coords);
         }
     }
-
-    // Затем обрабатываем команды Bus
-    for (const auto& command : commands_) {
+     
+    for (const auto& command : commands_) {s
         if (command.command == "Bus") {
             auto route = Route(command.description);
             std::vector<Stop*> stops;
@@ -119,18 +117,12 @@ void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
                 const Stop* stop = catalogue.FindStop(stop_name);
                 if (stop) {
                     stops.push_back(const_cast<Stop*>(stop));
-                }
-                else {
-                    std::cerr << "Warning: Stop " << stop_name << " not found, skipping...\n";
-                }
+                } 
             }
             if (!stops.empty()) {
                 bool is_looped = command.description.find('>') != std::string::npos;
                 catalogue.PushBus(command.id, stops, is_looped);
-            }
-            else {
-                std::cerr << "Warning: No valid stops found for bus " << command.id << ", skipping...\n";
-            }
+            } 
         }
     }
 }
