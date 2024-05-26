@@ -13,6 +13,6 @@
 // обработка запросов к базе и вывод данных
 
 namespace Parse {
-    void PrintStat(const TransportCatalogue& tansport_catalogue, std::string_view request,
-        std::ostream& output);
+    void PrintBusInfo(const TransportCatalogue& tansport_catalogue, std::string_view request, std::ostream& output);
+    void PrintStopInfo(const TransportCatalogue& tansport_catalogue, std::string_view request, std::ostream& output);
 }

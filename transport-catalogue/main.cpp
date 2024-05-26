@@ -27,6 +27,11 @@ int main() {
     for (int i = 0; i < stat_request_count; ++i) {
         string line;
         getline(cin, line);
-        Parse::PrintStat(catalogue, line, cout);
+        if (line.starts_with("Bus")) {
+            Parse::PrintBusInfo(catalogue, line, cout);
+        }
+        else if (line.starts_with("Stop")) {
+            Parse::PrintStopInfo(catalogue, line, cout);
+        }
     }
 }

@@ -109,7 +109,7 @@ void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
         }
     }
      
-    for (const auto& command : commands_) {s
+    for (const auto& command : commands_) {
         if (command.command == "Bus") {
             auto route = Route(command.description);
             std::vector<Stop*> stops;
