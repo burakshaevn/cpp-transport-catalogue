@@ -50,7 +50,7 @@ public:
 
 	const BusInfo GetBusInfo(const Bus* current_bus) const; 
 
-	const std::set<Bus*> GetBusesForStop(const std::string& name) const;
+	const std::set<Bus*> GetBusesForStop(const std::string_view name) const;
 
 private:
 	// База данных остановок: name=название_остановки, coords={широта, долгота}
@@ -66,5 +66,5 @@ private:
 	std::unordered_map<std::string_view, const Bus*> busname_to_bus_;
 
 	// Хранит название остановки и автобусы, которые посещают эту остановку
-	std::unordered_map<std::string, std::set<Bus*>> stop_buses_;
+	std::unordered_map<std::string_view, std::set<Bus*>> stop_buses_;
 };

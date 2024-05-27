@@ -64,7 +64,7 @@ const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
 	return bus_info;
 }
 
-const std::set<Bus*> TransportCatalogue::GetBusesForStop(const std::string& name) const {
+const std::set<Bus*> TransportCatalogue::GetBusesForStop(const std::string_view name) const {
 	auto it = stop_buses_.find(name);
 	if (it != stop_buses_.end()) {
 		return it->second;
