@@ -1,22 +1,44 @@
 #include "stat_reader.h" 
 
+//void Parse::PrintBusInfo(const TransportCatalogue& transport_catalogue, std::string_view request, std::ostream& output) {
+//    if (request.starts_with("Bus")) {
+//        std::string bus_name(request.substr(4)); // Пропускаем "Bus " в начале
+//        const Bus* current_bus = transport_catalogue.FindBus(bus_name);
+//
+//        if (!current_bus) {
+//            output << "Bus " << bus_name << ": not found"s << std::endl;
+//        }
+//        else {
+//            BusInfo bus_info = transport_catalogue.GetBusInfo(current_bus);
+//            output << "Bus " << bus_name << ": "
+//                << bus_info.count_stops << " stops on route, "
+//                << bus_info.unique_count_stops << " unique stops, "
+//                << std::setprecision(6) << bus_info.len << " route length\n";
+//        }
+//    }
+//}
+
+
+
 void Parse::PrintBusInfo(const TransportCatalogue& transport_catalogue, std::string_view request, std::ostream& output) {
     if (request.starts_with("Bus")) {
-        std::string bus_name(request.substr(4)); // Пропускаем "Bus " в начале
+        std::string bus_name(request.substr(4));
         const Bus* current_bus = transport_catalogue.FindBus(bus_name);
 
         if (!current_bus) {
             output << "Bus " << bus_name << ": not found"s << std::endl;
         }
         else {
-            BusInfo bus_info = transport_catalogue.GetBusInfo(current_bus);
+            BusInfo bus_info = transport_catalogue.GetBusInfo(current_bus); 
             output << "Bus " << bus_name << ": "
                 << bus_info.count_stops << " stops on route, "
                 << bus_info.unique_count_stops << " unique stops, "
-                << std::setprecision(6) << bus_info.len << " route length\n";
+                << bus_info.len << " route length, "
+                << bus_info.curvature << " curvature\n";
         }
     }
 }
+
 
 void Parse::PrintStopInfo(const TransportCatalogue& transport_catalogue, std::string_view request, std::ostream& output) {
     /* Запрос должен вывести информацию об остановке X в следующем формате:

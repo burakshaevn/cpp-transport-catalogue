@@ -101,11 +101,68 @@ void Parse::InputReader::Line(std::string_view line) {
         commands_.push_back(std::move(command_description));
     }
 }
-void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const { 
+//void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const { 
+//    for (const auto& command : commands_) {
+//        if (command.command == "Stop") {
+//            auto coords = Parse::Coordinates(command.description);
+//            catalogue.PushStop(command.id, coords);
+//        }
+//    }
+//     
+//    for (const auto& command : commands_) {
+//        if (command.command == "Bus") {
+//            auto route = Route(command.description);
+//            std::vector<Stop*> stops;
+//            for (const auto& stop_name : route) {
+//                const Stop* stop = catalogue.FindStop(stop_name);
+//                if (stop) {
+//                    stops.push_back(const_cast<Stop*>(stop));
+//                } 
+//            }
+//            if (!stops.empty()) {
+//                bool is_looped = command.description.find('>') != std::string::npos;
+//                catalogue.PushBus(command.id, stops, is_looped);
+//            } 
+//        }
+//    }
+//} 
+
+void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
+    // Сначала добавляем все остановки
     for (const auto& command : commands_) {
         if (command.command == "Stop") {
-            auto coords = Parse::Coordinates(command.description);
+            auto parts = Split(command.description, ',');
+            if (parts.size() < 2) {
+                continue; // Неверный формат, пропускаем
+            }
+            std::string coords_str = std::string(parts[0]) + "," + std::string(parts[1]);
+            detail::Coordinates coords = Parse::Coordinates(coords_str);
             catalogue.PushStop(command.id, coords);
+        }
+    }
+
+    // Затем добавляем расстояния между остановками
+    for (const auto& command : commands_) {
+        if (command.command == "Stop") {
+            auto parts = Split(command.description, ',');
+            if (parts.size() < 2) {
+                continue; // Неверный формат, пропускаем
+            }
+            for (size_t i = 2; i < parts.size(); ++i) {
+                std::string_view part = parts[i];
+                size_t m_pos = part.find("m to ");
+                if (m_pos == std::string_view::npos) {
+                    continue; // Неверный формат, пропускаем
+                }
+                int distance = std::stoi(std::string(part.substr(0, m_pos)));
+                std::string_view to_stop_name = Trim(part.substr(m_pos + 5)); // "m to " имеет длину 5
+
+                const Stop* from_stop = catalogue.FindStop(command.id);
+                const Stop* to_stop = catalogue.FindStop(to_stop_name);
+                if (from_stop && to_stop) {
+                    catalogue.SetDistance(from_stop, to_stop, distance);
+                }
+            }
         }
     }
      
@@ -117,37 +174,12 @@ void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
                 const Stop* stop = catalogue.FindStop(stop_name);
                 if (stop) {
                     stops.push_back(const_cast<Stop*>(stop));
-                } 
+                }
             }
             if (!stops.empty()) {
                 bool is_looped = command.description.find('>') != std::string::npos;
                 catalogue.PushBus(command.id, stops, is_looped);
-            } 
+            }
         }
     }
 }
-
-//void Parse::InputReader::ApplyCommands(TransportCatalogue& catalogue) const {
-//    // Обработка команд Stop
-//    for (const auto& command : commands_) {
-//        if (command.command == "Stop") {
-//            auto coords = Parse::Coordinates(command.description);
-//            catalogue.PushStop(command.id, coords);
-//        }
-//    }
-//
-//    // Обработка команд Bus
-//    for (const auto& command : commands_) {
-//        if (command.command == "Bus") {
-//            auto route = Route(command.description);
-//            std::vector<Stop*> stops;
-//            for (const auto& stop_name : route) {
-//                stops.push_back(Stop(stop_name));
-//            }
-//            bool is_looped = command.description.find('>') != std::string::npos;
-//            catalogue.PushBus(command.id, stops, is_looped);
-//        }
-//    }
-//}
-
-/**/

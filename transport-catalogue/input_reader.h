@@ -11,7 +11,7 @@ namespace Parse {
 
     detail::Coordinates Coordinates(std::string_view str);
 
-    std::vector<std::string_view> Route(std::string_view route);
+    std::vector<std::string_view> Route(std::string_view route); 
 
     struct CommandDescription {
         // Определяет, задана ли команда (поле command непустое)
@@ -41,6 +41,10 @@ namespace Parse {
          * Наполняет данными транспортный справочник, используя команды из commands_
          */
         void ApplyCommands(TransportCatalogue& catalogue) const;
+
+            std::pair<std::string, detail::Coordinates> FillStop(std::string& line);
+
+        void FillStopDistances(std::string& line, TransportCatalogue& catalogue);
 
     private:
         std::vector<CommandDescription> commands_;
