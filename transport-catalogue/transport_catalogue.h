@@ -1,44 +1,21 @@
 #pragma once
 
-#include "geo.h"
+#include "domain.h"
 #include <deque>
 #include <iostream>
 #include <set> 
+#include <map> 
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include "domain.h"
+#include "geo.h"
+#include <algorithm>
 
 using namespace std::string_literals;
 using namespace std::string_view_literals;
 
-// класс транспортного справочника
-
-// Содержит информацию об остановке: название и координаты (широта и долгота)
-struct Stop { 
-	std::string name;
-	detail::Coordinates coords;
-};
-
-struct Bus { 
-	std::string name;
-	std::vector<Stop*> stops;
-	bool is_looped;
-};
-
-struct BusInfo {
-	BusInfo()
-		: name(""s)
-		, count_stops(0)
-		, unique_count_stops(0)
-		, len(0.0)
-		, curvature(0.0)
-	{}
-	std::string name; // название маршрута. Оно совпадает с названием, переданным в запрос Bus.
-	size_t count_stops; //  количество остановок в маршруте автобуса от stop1 до stop1 включительно.
-	size_t unique_count_stops; // количество уникальных остановок, на которых останавливается автобус. Одинаковыми считаются остановки, имеющие одинаковые названия.
-	double len; //  длина маршрута в метрах
-	double curvature;
-};
+// класс транспортного справочника 
 
 struct StopHasher {
 	size_t operator()(const std::pair<const Stop*, const Stop*>& points) const {
@@ -50,9 +27,9 @@ struct StopHasher {
 
 class TransportCatalogue {
 public:
-	void PushBus(const std::string& name, const std::vector<Stop*>& stops, const bool is_looped);
+	void PushBus(const std::string_view name, std::vector<const Stop*>& stops, const bool is_roundtrip);
 
-	void PushStop(const std::string& name, const detail::Coordinates& coordinates);
+	void PushStop(const std::string_view name, const detail::Coordinates& coordinates);
 
 	const Bus* FindBus(const std::string_view name) const;
 
@@ -60,11 +37,15 @@ public:
 
 	const BusInfo GetBusInfo(const Bus* current_bus) const; 
 
-	const std::set<Bus*> GetBusesForStop(const std::string_view name) const;
+	const std::set<Bus*> GetBusesForStop(const std::string_view name) const; 
 
 	void SetDistance(const Stop* from, const Stop* to, int distance);
 
 	int GetDistance(const Stop* from, const Stop* to) const;
+
+	size_t UniqueStopsCount(std::string_view bus_number) const;
+
+	const std::map<std::string_view, const Bus*> GetSortedBuses() const;
 
 private:
 	// База данных остановок: name=название_остановки, coords={широта, долгота}
@@ -82,6 +63,6 @@ private:
 	// Хранит название остановки и автобусы, которые посещают эту остановку
 	std::unordered_map<std::string_view, std::set<Bus*>> stop_buses_;
 
-
+	// расстояние между остановками { от, до }
 	std::unordered_map<std::pair<const Stop*, const Stop*>, int, StopHasher> distances_;
 };
