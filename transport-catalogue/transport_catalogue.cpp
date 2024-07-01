@@ -62,16 +62,9 @@ const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
 
 	for (size_t i = 0; i < current_bus->stops.size() - 1; ++i) {
 		auto from = current_bus->stops[i];
-		auto to = current_bus->stops[i + 1];
-		/*if (current_bus->is_looped) {
-			route_length += GetDistance(from, to);
-			geographic_length += detail::ComputeDistance(from->coords,
-				to->coords);
-		}
-		else {*/
+		auto to = current_bus->stops[i + 1]; 
 		route_length += GetDistance(from, to);
-		geographic_length += detail::ComputeDistance(from->coords, to->coords);
-		//}
+		geographic_length += detail::ComputeDistance(from->coords, to->coords); 
 	}
 	 
 	bus_info.len = route_length;
