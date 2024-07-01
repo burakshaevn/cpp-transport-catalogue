@@ -33,58 +33,7 @@ const Stop* TransportCatalogue::FindStop(const std::string_view name) const {
 	else {
 		return nullptr;
 	}
-}
-
-// получение информации о маршруте в формате Bus X: R stops on route, U unique stops, L route length.
-//const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
-//	BusInfo bus_info;
-//
-//	// Подсчёт количества оставновок stop_size
-//	// Кольцевой: 1-2-3-1 (4)
-//	// Некольцевой: 1-2-3-4-3-2-1 (7)
-//	bus_info.count_stops = current_bus->stops.size(); 
-//
-//	// Подсчёт уникальных остановок 
-//	auto unique_stops_count = [&](const Bus* current_bus) {
-//		std::unordered_set<std::string> unique_stops;
-//		for (const auto& stop : current_bus->stops) {
-//			if (FindStop(stop->name)) {
-//				unique_stops.insert(stop->name);
-//			}
-//		}
-//		return unique_stops.size();
-//		};
-//	bus_info.unique_count_stops = unique_stops_count(current_bus);
-//
-//	// Длина маршрута в метрах
-//	for (auto iter = current_bus->stops.begin(); iter + 1 != current_bus->stops.end(); ++iter) {
-//		bus_info.len += detail::ComputeDistance(stopname_to_stop_.find((*iter)->name)->second->coords, stopname_to_stop_.find((*(iter + 1))->name)->second->coords);
-//	}
-//
-//	return bus_info;
-//} 
-//const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
-//	BusInfo bus_info;
-//
-//	 Подсчёт количества оставновок stop_size
-//	bus_info.count_stops = current_bus->stops.size();
-//
-//	 Подсчёт уникальных остановок 
-//	std::unordered_set<std::string> unique_stops;
-//	for (const auto& stop : current_bus->stops) {
-//		unique_stops.insert(stop->name);
-//	}
-//	bus_info.unique_count_stops = unique_stops.size();
-//
-//	 Длина маршрута в метрах
-//	for (auto iter = current_bus->stops.begin(); iter + 1 != current_bus->stops.end(); ++iter) {
-//		const Stop* from_stop = stopname_to_stop_.at((*iter)->name);
-//		const Stop* to_stop = stopname_to_stop_.at((*(iter + 1))->name);
-//		bus_info.len += detail::ComputeDistance(from_stop->coords, to_stop->coords);
-//	}
-//
-//	return bus_info;
-//}
+} 
 
 double GeographicalDistance(const Bus* bus) {
 	double total_distance = 0.0;
@@ -141,19 +90,7 @@ const std::set<Bus*> TransportCatalogue::GetBusesForStop(const std::string_view 
 
 void TransportCatalogue::SetDistance(const Stop* from, const Stop* to, int distance) {
 	distances_[{from, to}] = distance;
-}
-
-//int TransportCatalogue::GetDistance(const Stop* from, const Stop* to) const {
-//	if (distances_.count({ from, to })) {
-//		return distances_.at({ from, to });
-//	}
-//	else if (distances_.count({ to, from })) {
-//		return distances_.at({ to, from });
-//	}
-//	else {
-//		return 0;
-//	}
-//} 
+} 
 
 int TransportCatalogue::GetDistance(const Stop* from, const Stop* to) const {
 	if (auto it = distances_.find({ from, to }); it != distances_.end()) {
