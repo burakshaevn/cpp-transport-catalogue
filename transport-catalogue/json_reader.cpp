@@ -4,25 +4,6 @@
 
 #include "json_reader.h"
 
-<<<<<<< HEAD
-const json::Node& JsonReader::GetBaseRequests() const {
-    if (!input_.GetRoot().AsMap().count("base_requests")) {
-        return dummy_;
-    }
-    return input_.GetRoot().AsMap().at("base_requests");
-}
-
-const json::Node& JsonReader::GetStatRequests() const {
-    if (!input_.GetRoot().AsMap().count("stat_requests")) {
-        return dummy_;
-    }
-    return input_.GetRoot().AsMap().at("stat_requests");
-} 
-
-const json::Node& JsonReader::GetRenderSettings() const {
-    if (!input_.GetRoot().AsMap().count("render_settings")) return dummy_;
-    return input_.GetRoot().AsMap().at("render_settings");
-=======
 //const json::Node& JsonReader::GetBaseRequests() const {
 //    if (!input_.GetRoot().AsMap().count("base_requests")) {
 //        return nullptr;
@@ -66,7 +47,6 @@ const json::Node& JsonReader::GetRenderSettings() const {
         return empty_node;
     }
     return it->second;
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 }
 
 void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler& rh) const {
@@ -74,11 +54,6 @@ void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler
     for (auto& request : stat_requests.AsArray()) {
         const auto& request_map = request.AsMap();
         const auto& type = request_map.at("type").AsString();
-<<<<<<< HEAD
-        if (type == "Stop") result.push_back(PrintStop(request_map, rh).AsMap());
-        if (type == "Bus") result.push_back(PrintBus(request_map, rh).AsMap());
-        if (type == "Map") result.push_back(PrintMap(request_map, rh).AsMap());
-=======
         if (type == "Stop") {
             result.push_back(PrintStop(request_map, rh).AsMap());
         }
@@ -88,17 +63,11 @@ void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler
         if (type == "Map") {
             result.push_back(PrintMap(request_map, rh).AsMap());
         }
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     }
 
     json::Print(json::Document{ result }, std::cout);
 }
 
-<<<<<<< HEAD
-void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
-    const json::Array& arr = GetBaseRequests().AsArray();
-    for (auto& request_stops : arr) {
-=======
 //void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
 //    const json::Array& arr = GetBaseRequests().AsArray();
 //    for (auto& request_stops : arr) {
@@ -134,7 +103,6 @@ void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
 
 void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue& catalogue) {
     for (const auto& request_stops : arr) {
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
         const auto& request_stops_map = request_stops.AsMap();
         const auto& type = request_stops_map.at("type").AsString();
         if (type == "Stop") {
@@ -142,16 +110,10 @@ void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue&
             catalogue.PushStop(stop_name, coordinates);
         }
     }
-<<<<<<< HEAD
-    PullStopDistances(catalogue);
-
-    for (auto& request_bus : arr) {
-=======
 }
 
 void JsonReader::ProcessBusRequests(const json::Array& arr, TransportCatalogue& catalogue) {
     for (const auto& request_bus : arr) {
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
         const auto& request_bus_map = request_bus.AsMap();
         const auto& type = request_bus_map.at("type").AsString();
         if (type == "Bus") {
@@ -169,11 +131,7 @@ std::tuple<std::string_view, detail::Coordinates, std::map<std::string_view, int
     for (auto& [stop_name, dist] : distances) {
         stop_distances.emplace(stop_name, dist.AsInt());
     }
-<<<<<<< HEAD
-    return std::make_tuple(stop_name, coordinates, stop_distances);
-=======
     return { stop_name, coordinates, stop_distances };
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 }
 
 void JsonReader::PullStopDistances(TransportCatalogue& catalogue) const {
@@ -200,11 +158,7 @@ std::tuple<std::string_view, std::vector<const Stop*>, bool> JsonReader::PullBus
     }
     bool circular_route = request_map.at("is_roundtrip").AsBool();
 
-<<<<<<< HEAD
-    return std::make_tuple(bus_number, stops, circular_route);
-=======
     return { bus_number, stops, circular_route };
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 }
 
 renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_map) const {
@@ -221,20 +175,6 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
     const json::Array& stop_label_offset = request_map.at("stop_label_offset").AsArray();
     render_settings.stop_label_offset = { stop_label_offset[0].AsDouble(), stop_label_offset[1].AsDouble() };
 
-<<<<<<< HEAD
-    if (request_map.at("underlayer_color").IsString()) render_settings.underlayer_color = request_map.at("underlayer_color").AsString();
-    else if (request_map.at("underlayer_color").IsArray()) {
-        const json::Array& underlayer_color = request_map.at("underlayer_color").AsArray();
-        if (underlayer_color.size() == 3) {
-            render_settings.underlayer_color = svg::Rgb(underlayer_color[0].AsInt(), underlayer_color[1].AsInt(), underlayer_color[2].AsInt());
-        }
-        else if (underlayer_color.size() == 4) {
-            render_settings.underlayer_color = svg::Rgba(underlayer_color[0].AsInt(), underlayer_color[1].AsInt(), underlayer_color[2].AsInt(), underlayer_color[3].AsDouble());
-        }
-        else throw std::logic_error("wrong underlayer colortype");
-    }
-    else throw std::logic_error("wrong underlayer color");
-=======
     //if (request_map.at("underlayer_color").IsString()) {
     //    render_settings.underlayer_color = request_map.at("underlayer_color").AsString();
     //}
@@ -255,19 +195,14 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
     //}
 
     render_settings.underlayer_color = PullColor(request_map.at("underlayer_color"));
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
     render_settings.underlayer_width = request_map.at("underlayer_width").AsDouble();
 
     const json::Array& color_palette = request_map.at("color_palette").AsArray();
     for (const auto& color_element : color_palette) {
-<<<<<<< HEAD
-        if (color_element.IsString()) render_settings.color_palette.emplace_back(color_element.AsString());
-=======
         if (color_element.IsString()) {
             render_settings.color_palette.emplace_back(color_element.AsString());
         }
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
         else if (color_element.IsArray()) {
             const json::Array& color_type = color_element.AsArray();
             if (color_type.size() == 3) {
@@ -276,11 +211,6 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
             else if (color_type.size() == 4) {
                 render_settings.color_palette.emplace_back(svg::Rgba(color_type[0].AsInt(), color_type[1].AsInt(), color_type[2].AsInt(), color_type[3].AsDouble()));
             }
-<<<<<<< HEAD
-            else throw std::logic_error("wrong color_palette type");
-        }
-        else throw std::logic_error("wrong color_palette");
-=======
             else {
                 throw std::logic_error("wrong color_palette type");
             }
@@ -288,7 +218,6 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
         else {
             throw std::logic_error("wrong color_palette");
         }
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     }
 
     return render_settings;
@@ -302,18 +231,11 @@ const json::Node JsonReader::PrintBus(const json::Dict& request_map, RequestHand
         result["error_message"] = json::Node{ static_cast<std::string>("not found") };
     }
     else {
-<<<<<<< HEAD
-        result["curvature"] = rh.GetBusStat(route_number)->curvature;
-        result["route_length"] = rh.GetBusStat(route_number)->len;
-        result["stop_count"] = static_cast<int>(rh.GetBusStat(route_number)->count_stops);
-        result["unique_stop_count"] = static_cast<int>(rh.GetBusStat(route_number)->unique_count_stops);
-=======
         const auto& bus = rh.GetBusStat(route_number);
         result["curvature"] = bus->curvature;
         result["route_length"] = bus->len;
         result["stop_count"] = static_cast<int>(bus->count_stops);
         result["unique_stop_count"] = static_cast<int>(bus->unique_count_stops);
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     }
     return json::Node{ result };
 }
@@ -349,8 +271,6 @@ const json::Node JsonReader::PrintMap(const json::Dict& request_map, RequestHand
     result["map"] = strm.str();
 
     return json::Node{ result };
-<<<<<<< HEAD
-=======
 }
 
 svg::Color JsonReader::PullColor(const json::Node& color_node) const {
@@ -372,5 +292,4 @@ svg::Color JsonReader::PullColor(const json::Node& color_node) const {
     else {
         throw std::logic_error("Unexpected type for color in JSON");
     }
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 }

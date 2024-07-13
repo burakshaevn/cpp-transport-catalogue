@@ -6,15 +6,9 @@
 
 namespace renderer {
 
-<<<<<<< HEAD
-    bool IsZero(double value) {
-        return std::abs(value) < EPSILON;
-    }
-=======
     //bool IsZero(double value) {
     //    return std::abs(value) < EPSILON;
     //}
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
     std::vector<svg::Polyline> MapRenderer::GetRouteLines(const std::map<std::string_view, const Bus*>& buses, const SphereProjector& sp) const {
         std::vector<svg::Polyline> result;
@@ -153,24 +147,14 @@ namespace renderer {
             }
         }
         SphereProjector sp(route_stops_coord.begin(), route_stops_coord.end(), render_settings_.width, render_settings_.height, render_settings_.padding);
-<<<<<<< HEAD
-
-        for (const auto& line : GetRouteLines(buses, sp)) result.Add(line);
-        for (const auto& text : GetBusLabel(buses, sp)) result.Add(text);
-        for (const auto& circle : GetStopsSymbols(all_stops, sp)) result.Add(circle);
-        for (const auto& text : GetStopsLabels(all_stops, sp)) result.Add(text);
-=======
         DrawRouteLines(buses, sp, result);
         DrawBusLabel(buses, sp, result);
         DrawStopsSymbols(all_stops, sp, result);
         DrawStopsLabels(all_stops, sp, result);
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
         return result;
     }
 
-<<<<<<< HEAD
-=======
     void MapRenderer::DrawRouteLines(const std::map<std::string_view, const Bus* >& buses, SphereProjector& sp, svg::Document& result) const {
         for (const auto& line : GetRouteLines(buses, sp)) {
             result.Add(line);
@@ -191,5 +175,4 @@ namespace renderer {
             result.Add(text);
         }
     }
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 } // namespace renderer

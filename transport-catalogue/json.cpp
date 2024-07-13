@@ -226,11 +226,7 @@ namespace json {
 
     }  // namespace
 
-<<<<<<< HEAD
-    Node::Node(std::nullptr_t)
-=======
    /* Node::Node(std::nullptr_t)
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
         : value_(nullptr) {
     }
 
@@ -256,87 +252,6 @@ namespace json {
 
     Node::Node(Dict map)
         : value_(std::move(map)) {
-<<<<<<< HEAD
-    }
-
-    bool Node::IsInt() const {
-        return holds_alternative<int>(value_);
-    }
-
-    bool Node::IsDouble() const {
-        return holds_alternative<double>(value_) || holds_alternative<int>(value_);
-    }
-
-    bool Node::IsPureDouble() const {
-        return holds_alternative<double>(value_);
-    }
-
-    bool Node::IsBool() const {
-        return holds_alternative<bool>(value_);
-    }
-
-    bool Node::IsString() const {
-        return holds_alternative<std::string>(value_);
-    }
-
-    bool Node::IsNull() const {
-        return holds_alternative<std::nullptr_t>(value_);
-    }
-
-    bool Node::IsArray() const {
-        return holds_alternative<Array>(value_);
-    }
-
-    bool Node::IsMap() const {
-        return holds_alternative<Dict>(value_);
-    }
-
-    int Node::AsInt() const {
-        if (!IsInt()) throw std::logic_error("wrong type");
-        return std::get<int>(value_);
-    }
-
-    bool Node::AsBool() const {
-        if (!IsBool()) throw std::logic_error("wrong type");
-        return std::get<bool>(value_);
-    }
-
-    double Node::AsDouble() const {
-        if (!IsDouble()) throw std::logic_error("wrong type");
-        if (IsInt()) return static_cast<double>(std::get<int>(value_));
-        return std::get<double>(value_);
-    }
-
-    const std::string& Node::AsString() const {
-        if (!IsString()) throw std::logic_error("wrong type");
-        return std::get<std::string>(value_);
-    }
-
-    const Array& Node::AsArray() const {
-        if (!IsArray()) {
-            throw std::logic_error("wrong type");
-        }
-        return std::get<Array>(value_);
-    }
-
-    const Dict& Node::AsMap() const {
-        if (!IsMap()) {
-            throw std::logic_error("wrong type");
-        }
-        return std::get<Dict>(value_);
-    }
-
-    const Node::Value& Node::GetValue() const {
-        return value_;
-    }
-
-    bool Node::operator==(const Node& rhs) const {
-        return value_ == rhs.value_;
-    }
-
-    bool Node::operator!=(const Node& rhs) const {
-        return !(value_ == rhs.value_);
-=======
     }*/
 
     bool Node::IsInt() const {
@@ -429,7 +344,6 @@ namespace json {
 
     bool Node::operator!=(const Node& rhs) const {
         return !(*this == rhs.GetValue());
->>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     }
 
     Document::Document(Node root)
