@@ -30,6 +30,13 @@ public:
     void ProcessRequests(const json::Node& stat_requests, RequestHandler& rh) const;
 
     void PullCatalogue(TransportCatalogue& catalogue);
+<<<<<<< HEAD
+=======
+
+    void ProcessStopRequests(const json::Array& arr, TransportCatalogue& catalogue);
+
+    void ProcessBusRequests(const json::Array& arr, TransportCatalogue& catalogue); 
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     
     renderer::MapRenderer PullRenderSettings(const json::Dict& request_map) const;
 
@@ -39,9 +46,16 @@ public:
 
     const json::Node PrintMap(const json::Dict& request_map, RequestHandler& rh) const;
 
+<<<<<<< HEAD
 private:
     json::Document input_;
     json::Node dummy_ = nullptr;
+=======
+    svg::Color PullColor(const json::Node& color_node) const;
+
+private:
+    json::Document input_; 
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
     std::tuple<std::string_view, detail::Coordinates, std::map<std::string_view, int>> PullStop(const json::Dict& request_map) const;
     

@@ -14,7 +14,11 @@
 namespace renderer {
 
     inline const double EPSILON = 1e-6;
+<<<<<<< HEAD
     bool IsZero(double value);
+=======
+    //bool IsZero(double value);
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
     class SphereProjector {
     public: 
@@ -113,7 +117,11 @@ namespace renderer {
 
         std::vector<svg::Text> GetStopsLabels(const std::map<std::string_view, const Stop*>& stops, const SphereProjector& sp) const;
 
+<<<<<<< HEAD
         svg::Document GetSVG(const std::map<std::string_view, const Bus*>& buses) const;
+=======
+        svg::Document GetSVG(const std::map<std::string_view, const Bus*>& buses) const; 
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
 
     private:
         const RenderSettings render_settings_;

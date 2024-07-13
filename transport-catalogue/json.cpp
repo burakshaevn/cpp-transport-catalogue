@@ -226,7 +226,11 @@ namespace json {
 
     }  // namespace
 
+<<<<<<< HEAD
     Node::Node(std::nullptr_t)
+=======
+   /* Node::Node(std::nullptr_t)
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
         : value_(nullptr) {
     }
 
@@ -252,6 +256,7 @@ namespace json {
 
     Node::Node(Dict map)
         : value_(std::move(map)) {
+<<<<<<< HEAD
     }
 
     bool Node::IsInt() const {
@@ -331,6 +336,100 @@ namespace json {
 
     bool Node::operator!=(const Node& rhs) const {
         return !(value_ == rhs.value_);
+=======
+    }*/
+
+    bool Node::IsInt() const {
+        return std::holds_alternative<int>(*this);
+    }
+
+    bool Node::IsDouble() const {
+        return std::holds_alternative<double>(*this) || std::get<int>(*this);
+    }
+
+    bool Node::IsPureDouble() const {
+        return std::holds_alternative<double>(*this);
+    }
+
+    bool Node::IsBool() const {
+        return std::holds_alternative<bool>(*this);
+    }
+
+    bool Node::IsString() const {
+        //return typeid(std::holds_alternative<std::string>(*this)) == typeid(std::string);
+        return std::holds_alternative<std::string>(*this);
+    }
+
+    bool Node::IsNull() const {
+        //return std::get<std::nullptr_t>(*this);
+        //return typeid(std::holds_alternative<std::nullptr_t>(*this)) == typeid(std::nullptr_t);
+        return std::holds_alternative<std::nullptr_t>(*this);
+    }
+
+    bool Node::IsArray() const {
+        //return std::get<Array>(*this);
+        //return typeid(std::holds_alternative<Array>(*this)) == typeid(Array);
+        return std::holds_alternative<Array>(*this);
+    }
+
+    bool Node::IsMap() const {
+        //return std::get<Dict>(value_);
+        //return typeid(std::holds_alternative<Dict>(*this)) == typeid(Dict);
+        return std::holds_alternative<Dict>(*this);
+    }
+
+    bool Node::AsBool() const {
+        if (auto* value = std::get_if<bool>(this))
+            return *value;
+
+        throw std::logic_error("Impossible to parse node as Boolean"s);
+    }
+
+    int Node::AsInt() const {
+        if (auto* value = std::get_if<int>(this))
+            return *value;
+        throw std::logic_error("Impossible to parse node as Int "s);
+    }
+
+    double Node::AsDouble() const {
+        if (auto* value = std::get_if<double>(this))
+            return *value;
+
+        if (auto* value = std::get_if<int>(this))
+            return static_cast<double>(*value);
+
+        throw std::logic_error("Impossible to parse node as Double "s);
+    }
+
+    const std::string& Node::AsString() const {
+        if (auto* value = std::get_if<std::string>(this))
+            return *value;
+        throw std::logic_error("wrong type"s);
+    }
+
+    const Array& Node::AsArray() const {
+        if (auto* value = std::get_if<Array>(this))
+            return *value;
+        throw std::logic_error("wrong type"s);
+    }
+
+    const Dict& Node::AsMap() const {
+        if (auto* value = std::get_if<Dict>(this))
+            return *value;
+        throw std::logic_error("wrong type"s);
+    }
+
+    //const Value& Node::GetValue() const {
+    //    return *this;
+    //}
+
+    bool Node::operator==(const Node& rhs) const {
+        return *this == rhs.GetValue();
+    }
+
+    bool Node::operator!=(const Node& rhs) const {
+        return !(*this == rhs.GetValue());
+>>>>>>> 9c12ec5 (Вынес некоторые циклы в отдельные методы)
     }
 
     Document::Document(Node root)
