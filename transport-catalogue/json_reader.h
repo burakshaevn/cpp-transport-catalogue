@@ -10,6 +10,7 @@
 
 #include "map_renderer.h"
 #include "request_handler.h"
+#include "json_builder.h"
 #include <iostream>
 #include <sstream>
 

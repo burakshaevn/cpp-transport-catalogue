@@ -12,7 +12,7 @@
 //}
 
 const json::Node& JsonReader::GetBaseRequests() const {
-    const auto& root_map = input_.GetRoot().AsMap();
+    const auto& root_map = input_.GetRoot().AsDict();
     auto it = root_map.find("base_requests");
     if (it == root_map.end()) { 
         static json::Node empty_node;  
@@ -26,7 +26,7 @@ const json::Node& JsonReader::GetStatRequests() const {
     //    return nullptr;
     //}
     //return input_.GetRoot().AsMap().at("stat_requests");
-    const auto& root_map = input_.GetRoot().AsMap();
+    const auto& root_map = input_.GetRoot().AsDict();
     auto it = root_map.find("stat_requests");
     if (it == root_map.end()) { 
         static json::Node empty_node; 
@@ -40,7 +40,7 @@ const json::Node& JsonReader::GetRenderSettings() const {
     //    return nullptr;
     //}
     //return input_.GetRoot().AsMap().at("render_settings");
-    const auto& root_map = input_.GetRoot().AsMap();
+    const auto& root_map = input_.GetRoot().AsDict();
     auto it = root_map.find("render_settings");
     if (it == root_map.end()) { 
         static json::Node empty_node;  
@@ -52,16 +52,16 @@ const json::Node& JsonReader::GetRenderSettings() const {
 void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler& rh) const {
     json::Array result;
     for (auto& request : stat_requests.AsArray()) {
-        const auto& request_map = request.AsMap();
+        const auto& request_map = request.AsDict();
         const auto& type = request_map.at("type").AsString();
         if (type == "Stop") {
-            result.push_back(PrintStop(request_map, rh).AsMap());
+            result.push_back(PrintStop(request_map, rh).AsDict());
         }
         if (type == "Bus") {
-            result.push_back(PrintBus(request_map, rh).AsMap());
+            result.push_back(PrintBus(request_map, rh).AsDict());
         }
         if (type == "Map") {
-            result.push_back(PrintMap(request_map, rh).AsMap());
+            result.push_back(PrintMap(request_map, rh).AsDict());
         }
     }
 
@@ -103,7 +103,7 @@ void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
 
 void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue& catalogue) {
     for (const auto& request_stops : arr) {
-        const auto& request_stops_map = request_stops.AsMap();
+        const auto& request_stops_map = request_stops.AsDict();
         const auto& type = request_stops_map.at("type").AsString();
         if (type == "Stop") {
             auto [stop_name, coordinates, stop_distances] = PullStop(request_stops_map);
@@ -114,7 +114,7 @@ void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue&
 
 void JsonReader::ProcessBusRequests(const json::Array& arr, TransportCatalogue& catalogue) {
     for (const auto& request_bus : arr) {
-        const auto& request_bus_map = request_bus.AsMap();
+        const auto& request_bus_map = request_bus.AsDict();
         const auto& type = request_bus_map.at("type").AsString();
         if (type == "Bus") {
             auto [bus_number, stops, circular_route] = PullBus(request_bus_map, catalogue);
@@ -127,7 +127,7 @@ std::tuple<std::string_view, detail::Coordinates, std::map<std::string_view, int
     std::string_view stop_name = request_map.at("name").AsString();
     detail::Coordinates coordinates = { request_map.at("latitude").AsDouble(), request_map.at("longitude").AsDouble() };
     std::map<std::string_view, int> stop_distances;
-    auto& distances = request_map.at("road_distances").AsMap();
+    auto& distances = request_map.at("road_distances").AsDict();
     for (auto& [stop_name, dist] : distances) {
         stop_distances.emplace(stop_name, dist.AsInt());
     }
@@ -137,7 +137,7 @@ std::tuple<std::string_view, detail::Coordinates, std::map<std::string_view, int
 void JsonReader::PullStopDistances(TransportCatalogue& catalogue) const {
     const json::Array& arr = GetBaseRequests().AsArray();
     for (auto& request_stops : arr) {
-        const auto& request_stops_map = request_stops.AsMap();
+        const auto& request_stops_map = request_stops.AsDict();
         const auto& type = request_stops_map.at("type").AsString();
         if (type == "Stop") {
             auto [stop_name, coordinates, stop_distances] = PullStop(request_stops_map);
