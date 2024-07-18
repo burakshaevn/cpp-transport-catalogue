@@ -2,14 +2,7 @@
  * Код обработки запросов к базе и формирование массива ответов в формате JSON
  */
 
-#include "json_reader.h"
-
-//const json::Node& JsonReader::GetBaseRequests() const {
-//    if (!input_.GetRoot().AsMap().count("base_requests")) {
-//        return nullptr;
-//    }
-//    return input_.GetRoot().AsMap().at("base_requests");
-//}
+#include "json_reader.h" 
 
 const json::Node& JsonReader::GetBaseRequests() const {
     const auto& root_map = input_.GetRoot().AsDict();
@@ -21,11 +14,7 @@ const json::Node& JsonReader::GetBaseRequests() const {
     return it->second;
 }
 
-const json::Node& JsonReader::GetStatRequests() const {
-    //if (!input_.GetRoot().AsMap().count("stat_requests")) {
-    //    return nullptr;
-    //}
-    //return input_.GetRoot().AsMap().at("stat_requests");
+const json::Node& JsonReader::GetStatRequests() const { 
     const auto& root_map = input_.GetRoot().AsDict();
     auto it = root_map.find("stat_requests");
     if (it == root_map.end()) { 
@@ -35,11 +24,7 @@ const json::Node& JsonReader::GetStatRequests() const {
     return it->second;
 } 
 
-const json::Node& JsonReader::GetRenderSettings() const {
-    //if (!input_.GetRoot().AsMap().count("render_settings")) {
-    //    return nullptr;
-    //}
-    //return input_.GetRoot().AsMap().at("render_settings");
+const json::Node& JsonReader::GetRenderSettings() const { 
     const auto& root_map = input_.GetRoot().AsDict();
     auto it = root_map.find("render_settings");
     if (it == root_map.end()) { 
@@ -66,40 +51,14 @@ void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler
     }
 
     json::Print(json::Document{ result }, std::cout);
-}
-
-//void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
-//    const json::Array& arr = GetBaseRequests().AsArray();
-//    for (auto& request_stops : arr) {
-//        const auto& request_stops_map = request_stops.AsMap();
-//        const auto& type = request_stops_map.at("type").AsString();
-//        if (type == "Stop") {
-//            auto [stop_name, coordinates, stop_distances] = PullStop(request_stops_map);
-//            catalogue.PushStop(stop_name, coordinates);
-//        }
-//    }
-//    PullStopDistances(catalogue);
-//
-//    for (auto& request_bus : arr) {
-//        const auto& request_bus_map = request_bus.AsMap();
-//        const auto& type = request_bus_map.at("type").AsString();
-//        if (type == "Bus") {
-//            auto [bus_number, stops, circular_route] = PullBus(request_bus_map, catalogue);
-//            catalogue.PushBus(bus_number, stops, circular_route);
-//        }
-//    }
-//}
+} 
 
 void JsonReader::PullCatalogue(TransportCatalogue& catalogue) {
     const json::Array& arr = GetBaseRequests().AsArray();
     ProcessStopRequests(arr, catalogue);
     PullStopDistances(catalogue);
     ProcessBusRequests(arr, catalogue);
-}
-
-// Я разбил на отдельные методы циклы, как вы сказали. Но если честно, я не уверен, стоило ли это действительно делать. 
-// Лично мне кажется, что наоброт, не стоило наполнять код лишними функциями. Иногда я люблю воспользоваться лямбдой, чтобы не писать 
-// доп. функцию, которая будет вызываться только из одной функции один раз.
+} 
 
 void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue& catalogue) {
     for (const auto& request_stops : arr) {
@@ -107,7 +66,7 @@ void JsonReader::ProcessStopRequests(const json::Array& arr, TransportCatalogue&
         const auto& type = request_stops_map.at("type").AsString();
         if (type == "Stop") {
             auto [stop_name, coordinates, stop_distances] = PullStop(request_stops_map);
-            catalogue.PushStop(stop_name, coordinates);
+            catalogue.AddStop(stop_name, coordinates);
         }
     }
 }
@@ -118,7 +77,7 @@ void JsonReader::ProcessBusRequests(const json::Array& arr, TransportCatalogue& 
         const auto& type = request_bus_map.at("type").AsString();
         if (type == "Bus") {
             auto [bus_number, stops, circular_route] = PullBus(request_bus_map, catalogue);
-            catalogue.PushBus(bus_number, stops, circular_route);
+            catalogue.AddBus(bus_number, stops, circular_route);
         }
     }
 }
@@ -173,26 +132,7 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
     render_settings.bus_label_offset = { bus_label_offset[0].AsDouble(), bus_label_offset[1].AsDouble() };
     render_settings.stop_label_font_size = request_map.at("stop_label_font_size").AsInt();
     const json::Array& stop_label_offset = request_map.at("stop_label_offset").AsArray();
-    render_settings.stop_label_offset = { stop_label_offset[0].AsDouble(), stop_label_offset[1].AsDouble() };
-
-    //if (request_map.at("underlayer_color").IsString()) {
-    //    render_settings.underlayer_color = request_map.at("underlayer_color").AsString();
-    //}
-    //else if (request_map.at("underlayer_color").IsArray()) {
-    //    const json::Array& underlayer_color = request_map.at("underlayer_color").AsArray();
-    //    if (underlayer_color.size() == 3) {
-    //        render_settings.underlayer_color = svg::Rgb(underlayer_color[0].AsInt(), underlayer_color[1].AsInt(), underlayer_color[2].AsInt());
-    //    }
-    //    else if (underlayer_color.size() == 4) {
-    //        render_settings.underlayer_color = svg::Rgba(underlayer_color[0].AsInt(), underlayer_color[1].AsInt(), underlayer_color[2].AsInt(), underlayer_color[3].AsDouble());
-    //    }
-    //    else {
-    //        throw std::logic_error("wrong underlayer colortype");
-    //    }
-    //}
-    //else {
-    //    throw std::logic_error("wrong underlayer color");
-    //}
+    render_settings.stop_label_offset = { stop_label_offset[0].AsDouble(), stop_label_offset[1].AsDouble() }; 
 
     render_settings.underlayer_color = PullColor(request_map.at("underlayer_color"));
 

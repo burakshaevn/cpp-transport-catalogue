@@ -1,7 +1,7 @@
 #include "transport_catalogue.h" 
 
 // добавление маршрута в базу,
-void TransportCatalogue::PushBus(const std::string_view name, std::vector<const Stop*>& stops, const bool is_roundtrip) {
+void TransportCatalogue::AddBus(const std::string_view name, std::vector<const Stop*>& stops, const bool is_roundtrip) {
 	buses_.push_back({ std::string(name), stops, is_roundtrip });
 	busname_to_bus_[buses_.back().name] = &buses_.back();
 	for (auto& stop : stops) { 
@@ -10,15 +10,16 @@ void TransportCatalogue::PushBus(const std::string_view name, std::vector<const 
 }
 
 // добавление остановки в базу,
-void TransportCatalogue::PushStop(const std::string_view name, const detail::Coordinates& coordinates) {
+void TransportCatalogue::AddStop(const std::string_view name, const detail::Coordinates& coordinates) {
 	stops_.push_back({ std::string(name), coordinates });
 	stopname_to_stop_[stops_.back().name] = &stops_.back();
-}
+} 
 
 // поиск маршрута по имени,
 const Bus* TransportCatalogue::FindBus(const std::string_view name) const {
-	if (busname_to_bus_.count(name)){
-		return busname_to_bus_.at(name);
+	auto iter = busname_to_bus_.find(name);
+	if (iter != busname_to_bus_.end()) {
+		return iter->second;
 	}
 	else {
 		return nullptr;
@@ -27,13 +28,14 @@ const Bus* TransportCatalogue::FindBus(const std::string_view name) const {
 
 // поиск остановки по имени,
 const Stop* TransportCatalogue::FindStop(const std::string_view name) const {
-	if (stopname_to_stop_.count(name)) {
-		return stopname_to_stop_.at(name);
+	auto iter = stopname_to_stop_.find(name);
+	if (iter != stopname_to_stop_.end()) {
+		return iter->second;
 	}
 	else {
 		return nullptr;
 	}
-} 
+}
 
 double GeographicalDistance(const Bus* bus) {
 	double total_distance = 0.0;
@@ -92,10 +94,10 @@ int TransportCatalogue::GetDistance(const Stop* from, const Stop* to) const {
 	if (auto it = distances_.find({ to, from }); it != distances_.end()) {
 		return it->second;
 	}
-	return 0; // Или другое значение по умолчанию, если расстояние не найдено
+	return 0;  
 }
 
-size_t TransportCatalogue::UniqueStopsCount(std::string_view bus_number) const {
+size_t TransportCatalogue::ComputeUniqueStopsCount(std::string_view bus_number) const {
 	std::unordered_set<std::string_view> unique_stops;
 	for (const auto& stop : busname_to_bus_.at(bus_number)->stops) {
 		unique_stops.insert(stop->name);

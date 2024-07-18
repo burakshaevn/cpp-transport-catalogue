@@ -27,7 +27,7 @@ std::optional<BusInfo> RequestHandler::GetBusStat(const std::string_view& bus_nu
         }
     }
 
-    bus_stat.unique_count_stops = catalogue_.UniqueStopsCount(bus_number);
+    bus_stat.unique_count_stops = catalogue_.ComputeUniqueStopsCount(bus_number);
     bus_stat.len = route_length;
     bus_stat.curvature = route_length / geographic_length;
 

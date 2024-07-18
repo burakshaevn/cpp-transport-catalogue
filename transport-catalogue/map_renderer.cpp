@@ -4,12 +4,7 @@
 
 #include "map_renderer.h"
 
-namespace renderer {
-
-    //bool IsZero(double value) {
-    //    return std::abs(value) < EPSILON;
-    //}
-
+namespace renderer { 
     std::vector<svg::Polyline> MapRenderer::GetRouteLines(const std::map<std::string_view, const Bus*>& buses, const SphereProjector& sp) const {
         std::vector<svg::Polyline> result;
         size_t color_num = 0;

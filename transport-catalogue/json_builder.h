@@ -38,14 +38,30 @@ namespace json {
 
         class BaseContext {
         public:
-            BaseContext(Builder& builder) : builder_(builder) {}
-            Node Build() { return builder_.Build(); }
-            DictValueContext Key(std::string key) { return builder_.Key(std::move(key)); }
-            BaseContext Value(Node::Value value) { return builder_.Value(std::move(value)); }
-            DictItemContext StartDict() { return builder_.StartDict(); }
-            ArrayItemContext StartArray() { return builder_.StartArray(); }
-            BaseContext EndDict() { return builder_.EndDict(); }
-            BaseContext EndArray() { return builder_.EndArray(); }
+            BaseContext(Builder& builder)
+                : builder_(builder)
+            {}
+            Node Build() {
+                return builder_.Build();
+            }
+            DictValueContext Key(std::string key) {
+                return builder_.Key(std::move(key));
+            }
+            BaseContext Value(Node::Value value) {
+                return builder_.Value(std::move(value));
+            }
+            DictItemContext StartDict() {
+                return builder_.StartDict();
+            }
+            ArrayItemContext StartArray() {
+                return builder_.StartArray();
+            }
+            BaseContext EndDict() {
+                return builder_.EndDict();
+            }
+            BaseContext EndArray() {
+                return builder_.EndArray();
+            }
         private:
             Builder& builder_;
         };
@@ -53,18 +69,33 @@ namespace json {
         class DictValueContext : public BaseContext {
         public:
             using BaseContext::BaseContext;
-            DictItemContext Value(Node::Value value) { return  Value(std::move(value)); }
+            DictItemContext Value(Node::Value value) {
+                return  Value(std::move(value));
+            }
+            Node Build() = delete;
+            DictValueContext Key(std::string key) = delete;
+            BaseContext EndDict() = delete;
+            BaseContext EndArray() = delete;
         };
 
         class DictItemContext : public BaseContext {
         public:
             using BaseContext::BaseContext;
+            BaseContext Value(Node::Value value) = delete;
+            BaseContext EndArray() = delete;
+            DictItemContext StartDict() = delete;
+            ArrayItemContext StartArray() = delete;
         };
 
         class ArrayItemContext : public BaseContext {
         public:
             using BaseContext::BaseContext;
-            ArrayItemContext Value(Node::Value value) { return Value(std::move(value)); }
+            ArrayItemContext Value(Node::Value value) {
+                return Value(std::move(value));
+            }
+            Node Build() = delete;
+            DictValueContext Key(std::string key) = delete;
+            BaseContext EndDict() = delete;
         };
     };
 

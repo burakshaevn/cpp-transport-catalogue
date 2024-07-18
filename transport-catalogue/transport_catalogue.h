@@ -27,9 +27,9 @@ struct StopHasher {
 
 class TransportCatalogue {
 public:
-	void PushBus(const std::string_view name, std::vector<const Stop*>& stops, const bool is_roundtrip);
+	void AddBus(const std::string_view name, std::vector<const Stop*>& stops, const bool is_roundtrip);
 
-	void PushStop(const std::string_view name, const detail::Coordinates& coordinates);
+	void AddStop(const std::string_view name, const detail::Coordinates& coordinates);
 
 	const Bus* FindBus(const std::string_view name) const;
 
@@ -43,11 +43,13 @@ public:
 
 	int GetDistance(const Stop* from, const Stop* to) const;
 
-	size_t UniqueStopsCount(std::string_view bus_number) const;
-
 	const std::map<std::string_view, const Bus*> GetSortedBuses() const;
 
 private:
+	friend class RequestHandler;
+
+	size_t ComputeUniqueStopsCount(std::string_view bus_number) const;
+
 	// База данных остановок: name=название_остановки, coords={широта, долгота}
 	std::deque<Stop> stops_;
 
