@@ -62,7 +62,7 @@ namespace json {
             BaseContext EndArray() {
                 return builder_.EndArray();
             }
-        private:
+        protected:
             Builder& builder_;
         };
 
@@ -70,7 +70,8 @@ namespace json {
         public:
             using BaseContext::BaseContext;
             DictItemContext Value(Node::Value value) {
-                return  Value(std::move(value));
+                BaseContext::Value(std::move(value));
+                return DictItemContext(builder_);
             }
             Node Build() = delete;
             DictValueContext Key(std::string key) = delete;
@@ -91,12 +92,13 @@ namespace json {
         public:
             using BaseContext::BaseContext;
             ArrayItemContext Value(Node::Value value) {
-                return Value(std::move(value));
+                BaseContext::Value(std::move(value));
+                return ArrayItemContext(builder_);
             }
             Node Build() = delete;
             DictValueContext Key(std::string key) = delete;
             BaseContext EndDict() = delete;
         };
     };
-
+ 
 }  // namespace json

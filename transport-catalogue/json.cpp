@@ -294,9 +294,7 @@ namespace json {
         }
 
         // В специализации шаблона PrintValue для типа bool параметр value передаётся
-        // по константной ссылке, как и в основном шаблоне.
-        // В качестве альтернативы можно использовать перегрузку:
-        // void PrintValue(bool value, const PrintContext& ctx);
+        // по константной ссылке, как и в основном шаблоне. 
         template <>
         void PrintValue<bool>(const bool& value, const PrintContext& ctx) {
             ctx.out << (value ? "true"sv : "false"sv);

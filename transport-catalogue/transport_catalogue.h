@@ -45,6 +45,8 @@ public:
 
 	const std::map<std::string_view, const Bus*> GetSortedBuses() const;
 
+	const std::map<std::string_view, const Stop*> GetSortedStops() const;
+
 private:
 	friend class RequestHandler;
 

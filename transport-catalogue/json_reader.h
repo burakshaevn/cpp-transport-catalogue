@@ -1,6 +1,6 @@
 /*
- * Здесь можно разместить код наполнения транспортного справочника данными из JSON,
- * а также код обработки запросов к базе и формирование массива ответов в формате JSON
+ * Наполнение транспортного справочника данными из JSON,
+ * Обработка запросов к базе и формирование массива ответов в формате JSON
  */
 
 #pragma once
@@ -11,6 +11,7 @@
 #include "map_renderer.h"
 #include "request_handler.h"
 #include "json_builder.h"
+#include "transport_router.h"
 #include <iostream>
 #include <sstream>
 
@@ -24,9 +25,11 @@ public:
 
     const json::Node& GetBaseRequests() const;
 
-    const json::Node& GetStatRequests() const;
-    
+    const json::Node& GetRoutingSettings() const;
+
     const json::Node& GetRenderSettings() const;
+
+    const json::Node& GetStatRequests() const;
 
     void ProcessRequests(const json::Node& stat_requests, RequestHandler& rh) const;
 
@@ -37,12 +40,16 @@ public:
     void ProcessBusRequests(const json::Array& arr, TransportCatalogue& catalogue); 
     
     renderer::MapRenderer PullRenderSettings(const json::Dict& request_map) const;
+    
+    TransportRouter PullRoutingSettings(const json::Node& settings_map) const;
 
     const json::Node PrintBus(const json::Dict& request_map, RequestHandler& rh) const;
 
     const json::Node PrintStop(const json::Dict& request_map, RequestHandler& rh) const;
 
     const json::Node PrintMap(const json::Dict& request_map, RequestHandler& rh) const;
+    
+    const json::Node PrintRoute(const json::Dict& request_map, RequestHandler& rh) const;
 
     svg::Color PullColor(const json::Node& color_node) const;
 

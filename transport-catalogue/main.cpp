@@ -11,10 +11,14 @@ int main() {
     json_doc.PullCatalogue(catalogue);
      
     const auto& stat_requests = json_doc.GetStatRequests();
+    
     const auto& render_settings = json_doc.GetRenderSettings().AsDict();
     const auto& renderer = json_doc.PullRenderSettings(render_settings);
 
-    RequestHandler rh(catalogue, renderer);  
+    const auto& routing_array = json_doc.GetRoutingSettings().AsDict();
+    auto routing_settings = json_doc.PullRoutingSettings(routing_array);
+    const auto& router = TransportRouter{ std::move(routing_settings), catalogue };
 
+    RequestHandler rh(catalogue, renderer, router);
     json_doc.ProcessRequests(stat_requests, rh);
-}
+} 

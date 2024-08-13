@@ -9,9 +9,13 @@ namespace renderer {
         std::vector<svg::Polyline> result;
         size_t color_num = 0;
         for (const auto& [bus_number, bus] : buses) {
-            if (bus->stops.empty()) continue;
+            if (bus->stops.empty()) {
+                continue;
+            }
             std::vector<const Stop*> route_stops{ bus->stops.begin(), bus->stops.end() };
-            if (bus->is_roundtrip == false) route_stops.insert(route_stops.end(), std::next(bus->stops.rbegin()), bus->stops.rend());
+            if (bus->is_roundtrip == false) {
+                route_stops.insert(route_stops.end(), std::next(bus->stops.rbegin()), bus->stops.rend());
+            }
             svg::Polyline line;
             for (const auto& stop : route_stops) {
                 line.AddPoint(sp(stop->coords));
@@ -135,7 +139,9 @@ namespace renderer {
         std::map<std::string_view, const Stop*> all_stops;
 
         for (const auto& [bus_number, bus] : buses) {
-            if (bus->stops.empty()) continue;
+            if (bus->stops.empty()) {
+                continue;
+            }
             for (const auto& stop : bus->stops) {
                 route_stops_coord.push_back(stop->coords);
                 all_stops[stop->name] = stop;

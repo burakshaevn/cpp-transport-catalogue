@@ -38,6 +38,19 @@ svg::Document RequestHandler::RenderMap() const {
     return renderer_.GetSVG(catalogue_.GetSortedBuses());
 }
 
-const TransportCatalogue& RequestHandler::GetCaralogue() const {
+const TransportCatalogue& RequestHandler::GetCatalogue() const {
     return catalogue_;
+}
+
+const RequestHandler::Graph& RequestHandler::GetTransportRouterGraph() const {
+    return transport_router_.GetGraph();
+}
+
+const std::optional<graph::Router<double>::RouteInfo> RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const {
+    try {
+        return transport_router_.GetRouter().get()->BuildRoute(transport_router_.GetVertexId(from), transport_router_.GetVertexId(to));
+    }
+    catch (const std::invalid_argument&) {
+        return std::nullopt;
+    }
 }
