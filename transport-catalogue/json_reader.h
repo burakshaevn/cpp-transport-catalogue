@@ -41,7 +41,7 @@ public:
     
     renderer::MapRenderer PullRenderSettings(const json::Dict& request_map) const;
     
-    TransportRouter PullRoutingSettings(const json::Node& settings_map) const;
+    TransportRouter PullRoutingSettings(const json::Node& settings_map, const TransportCatalogue& catalogue) const;
 
     const json::Node PrintBus(const json::Dict& request_map, RequestHandler& rh) const;
 

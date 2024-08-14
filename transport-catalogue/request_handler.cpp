@@ -47,10 +47,5 @@ const RequestHandler::Graph& RequestHandler::GetTransportRouterGraph() const {
 }
 
 const std::optional<graph::Router<double>::RouteInfo> RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const {
-    try {
-        return transport_router_.GetRouter().get()->BuildRoute(transport_router_.GetVertexId(from), transport_router_.GetVertexId(to));
-    }
-    catch (const std::invalid_argument&) {
-        return std::nullopt;
-    }
+    return transport_router_.FindRoute(from, to);
 }

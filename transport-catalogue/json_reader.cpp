@@ -52,13 +52,13 @@ void JsonReader::ProcessRequests(const json::Node& stat_requests, RequestHandler
         if (type == "Stop") {
             result.push_back(PrintStop(request_map, rh).AsDict());
         }
-        if (type == "Bus") {
+        else if (type == "Bus") {
             result.push_back(PrintBus(request_map, rh).AsDict());
         }
-        if (type == "Map") {
+        else if (type == "Map") {
             result.push_back(PrintMap(request_map, rh).AsDict());
         }
-        if (type == "Route") {
+        else if (type == "Route") {
             result.push_back(PrintRoute(request_map, rh).AsDict());
         }
     }
@@ -175,11 +175,8 @@ renderer::MapRenderer JsonReader::PullRenderSettings(const json::Dict& request_m
     return render_settings;
 } 
 
-TransportRouter JsonReader::PullRoutingSettings(const json::Node& settings_map) const {
-    TransportRouter transport_settings; 
-    transport_settings.SetBusWaitTime(settings_map.AsDict().at("bus_wait_time").AsInt());
-    transport_settings.SetBusVelocity(settings_map.AsDict().at("bus_velocity").AsDouble());
-    return transport_settings;
+TransportRouter JsonReader::PullRoutingSettings(const json::Node& settings_map, const TransportCatalogue& catalogue) const {
+    return TransportRouter{ settings_map.AsDict().at("bus_wait_time").AsInt(), settings_map.AsDict().at("bus_velocity").AsDouble(), catalogue };
 }
 
 const json::Node JsonReader::PrintBus(const json::Dict& request_map, RequestHandler& rh) const {

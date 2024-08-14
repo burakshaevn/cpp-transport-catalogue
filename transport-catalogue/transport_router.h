@@ -13,21 +13,13 @@ public:
 	using Router = std::unique_ptr<graph::Router<double>>;
 
 	TransportRouter() = default;
-	 
-	explicit TransportRouter(TransportRouter&& other, const TransportCatalogue& catalogue) {
-		SetBusWaitTime(other.bus_wait_time_);
-		SetBusVelocity(other.bus_velocity_);
-		BuildGraph(catalogue);
-	}
 
-	template <typename T>
-	void SetBusWaitTime(T&& object) {
-		bus_wait_time_ = std::forward<T>(object);
-	}
-	
-	template <typename T>
-	void SetBusVelocity(T&& object) {
-		bus_velocity_ = std::forward<T>(object);
+	template <typename WaitTime, typename Velocity>
+	explicit TransportRouter(WaitTime&& wait_time, Velocity&& velocity, const TransportCatalogue& catalogue) {
+		bus_wait_time_ = std::forward<WaitTime>(wait_time);
+		bus_velocity_ = std::forward<Velocity>(velocity);
+		catalogue_ = catalogue;
+		BuildGraph();
 	}
 
 	int GetBusWaitTime() const {
@@ -58,7 +50,11 @@ public:
 		throw std::invalid_argument("Stop name not found");
 	}
 
-	const Graph& BuildGraph(const TransportCatalogue& catalogue);
+	const std::optional<graph::Router<double>::RouteInfo> FindRoute(const std::string_view stop_from, const std::string_view stop_to) const;
+
+	const Graph& BuildGraph();
+	void AddStopsToGraph(Graph& stops_graph);
+	void AddBusesToGraph(Graph& stops_graph);
 
 private:
 	// время ожидания автобуса на остановке, в минутах
@@ -72,5 +68,7 @@ private:
 	Router router_;
 
 	std::unordered_map<std::string, graph::VertexId> stop_name_to_vertex_id_;
+
+	TransportCatalogue catalogue_;
 
 };

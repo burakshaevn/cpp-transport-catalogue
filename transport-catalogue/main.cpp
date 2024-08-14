@@ -16,8 +16,8 @@ int main() {
     const auto& renderer = json_doc.PullRenderSettings(render_settings);
 
     const auto& routing_array = json_doc.GetRoutingSettings().AsDict();
-    auto routing_settings = json_doc.PullRoutingSettings(routing_array);
-    const auto& router = TransportRouter{ std::move(routing_settings), catalogue };
+    auto routing_settings = json_doc.PullRoutingSettings(routing_array, catalogue);
+    const auto& router = TransportRouter{ std::move(routing_settings.GetBusWaitTime()), std::move(routing_settings.GetBusVelocity()), catalogue};
 
     RequestHandler rh(catalogue, renderer, router);
     json_doc.ProcessRequests(stat_requests, rh);

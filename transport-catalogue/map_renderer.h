@@ -13,8 +13,7 @@
 
 namespace renderer {
 
-    inline const double EPSILON = 1e-6;
-    //bool IsZero(double value);
+    inline const double EPSILON = 1e-6; 
 
     class SphereProjector {
     public: 
