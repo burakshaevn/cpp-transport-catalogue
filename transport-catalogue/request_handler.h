@@ -21,13 +21,13 @@ public:
 
     svg::Document RenderMap() const;
 
-    const TransportCatalogue& GetCatalogue() const;
-    
-    const Graph& GetTransportRouterGraph() const;
+    const TransportCatalogue& GetCatalogue() const;  
 
-    const std::optional<graph::Router<double>::RouteInfo> GetOptimalRoute(const std::string_view from, const std::string_view to) const;
+    std::pair<std::optional<graph::Router<double>::RouteInfo>, const TransportRouter::Graph&> GetOptimalRoute(const std::string_view from, const std::string_view to) const;
 
 private:
+    friend class TransportRouter;
+
     const TransportCatalogue& catalogue_; 
     const renderer::MapRenderer& renderer_;
     const TransportRouter& transport_router_;

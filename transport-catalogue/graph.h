@@ -29,6 +29,7 @@ namespace graph {
         DirectedWeightedGraph() = default;
         explicit DirectedWeightedGraph(size_t vertex_count);
         EdgeId AddEdge(const Edge<Weight>& edge);
+        void Resize(const size_t vertex_count);
 
         size_t GetVertexCount() const;
         size_t GetEdgeCount() const;
@@ -51,6 +52,11 @@ namespace graph {
         const EdgeId id = edges_.size() - 1;
         incidence_lists_.at(edge.from).push_back(id);
         return id;
+    }
+
+    template <typename Weight>
+    void DirectedWeightedGraph<Weight>::Resize(const size_t vertex_count) {
+        incidence_lists_.resize(vertex_count);
     }
 
     template <typename Weight>

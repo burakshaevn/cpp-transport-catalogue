@@ -42,10 +42,20 @@ const TransportCatalogue& RequestHandler::GetCatalogue() const {
     return catalogue_;
 }
 
-const RequestHandler::Graph& RequestHandler::GetTransportRouterGraph() const {
-    return transport_router_.GetGraph();
+std::pair<std::optional<graph::Router<double>::RouteInfo>, const TransportRouter::Graph&>
+RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const {
+    auto route_info_opt = transport_router_.FindRoute(from, to);
+    if (!route_info_opt) {
+        return { std::nullopt, transport_router_.graph_ };
+    }
+        return { *route_info_opt, transport_router_.graph_ };
 }
 
-const std::optional<graph::Router<double>::RouteInfo> RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const {
-    return transport_router_.FindRoute(from, to);
-}
+//std::optional</*std::tuple<*/graph::Router<double>::RouteInfo/*, const TransportRouter::Graph>*/>
+//RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const { 
+//    /*auto route_info_opt =*/ return transport_router_.FindRoute(from, to);
+//    /*if (!route_info_opt) {
+//        return std::nullopt;
+//    }
+//    return std::make_tuple(*route_info_opt, transport_router_.graph_);*/
+//}

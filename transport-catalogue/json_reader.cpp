@@ -235,9 +235,9 @@ const json::Node JsonReader::PrintRoute(const json::Dict& request_map, RequestHa
     const int id = request_map.at("id"s).AsInt();
     const std::string_view stop_from = request_map.at("from"s).AsString();
     const std::string_view stop_to = request_map.at("to"s).AsString();
-    const auto& routing = rh.GetOptimalRoute(stop_from, stop_to);
+    const auto& [optimal_route_opt, graph] = rh.GetOptimalRoute(stop_from, stop_to);
 
-    if (!routing) {
+    if (!optimal_route_opt) {
         result = json::Builder{}
             .StartDict()
             .Key("request_id"s).Value(id)
@@ -245,12 +245,13 @@ const json::Node JsonReader::PrintRoute(const json::Dict& request_map, RequestHa
             .EndDict()
             .Build();
     }
-    else {
+    else { 
+        
         json::Array items;
         double total_time = 0.0;
-        items.reserve(routing.value().edges.size());
-        for (auto& edge_id : routing.value().edges) {
-            const graph::Edge<double> edge = rh.GetTransportRouterGraph().GetEdge(edge_id);
+        items.reserve(optimal_route_opt.value().edges.size());
+        for (auto& edge_id : optimal_route_opt.value().edges) {
+            const graph::Edge<double> edge = graph.GetEdge(edge_id);  
             if (edge.quality == 0) {
                 items.emplace_back(json::Node(json::Builder{}
                     .StartDict()

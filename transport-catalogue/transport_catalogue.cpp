@@ -35,15 +35,7 @@ const Stop* TransportCatalogue::FindStop(const std::string_view name) const {
 	else {
 		return nullptr;
 	}
-}
-
-double GeographicalDistance(const Bus* bus) {
-	double total_distance = 0.0;
-	for (auto iter = bus->stops.begin(); iter + 1 != bus->stops.end(); ++iter) {
-		total_distance += detail::ComputeDistance((*iter)->coords, (*(iter + 1))->coords);
-	}
-	return total_distance;
-}
+} 
 
 const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
 	BusInfo bus_info;
