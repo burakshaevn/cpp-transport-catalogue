@@ -49,13 +49,4 @@ RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_v
         return { std::nullopt, transport_router_.graph_ };
     }
         return { *route_info_opt, transport_router_.graph_ };
-}
-
-//std::optional</*std::tuple<*/graph::Router<double>::RouteInfo/*, const TransportRouter::Graph>*/>
-//RequestHandler::GetOptimalRoute(const std::string_view from, const std::string_view to) const { 
-//    /*auto route_info_opt =*/ return transport_router_.FindRoute(from, to);
-//    /*if (!route_info_opt) {
-//        return std::nullopt;
-//    }
-//    return std::make_tuple(*route_info_opt, transport_router_.graph_);*/
-//}
+} 
