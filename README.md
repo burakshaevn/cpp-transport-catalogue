@@ -596,4 +596,11 @@
 Отвечает за нахождение кратчайших маршрутов между остановками с учетом времени ожидания и скорости движения автобусов. Использует алгоритмы поиска кратчайших путей для предоставления пользователю маршрутов.
 
 ## Сборка
-... 
+```bash
+git clone git@github.com:burakshaevn/cpp-transport-catalogue.git
+mkdir build
+cd build
+cmake ../transport-catalogue
+cmake --build .
+```
+После сборки по адресу `../cpp-transport-catalogue/build/Debug` появится TransportCatalogue.exe. Запусаем, указываем JSON-документ из примера 1. После успешного выполнения в терминал будет выведен выходной JSON-документ, а по адресу `../cpp-transport-catalogue/` появится файл map.svg с рендером.
