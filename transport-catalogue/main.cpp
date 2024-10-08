@@ -25,7 +25,7 @@ int main() {
 
     std::ofstream svg_file("../../map.svg");
     if (!svg_file) {
-        std::cerr << "Íå óäàëîñü îòêðûòü ôàéë äëÿ çàïèñè." << std::endl;
+        std::cerr << "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð» Ð´Ð»Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸." << std::endl;
         return 1;
     }
 
