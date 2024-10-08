@@ -2,6 +2,7 @@
 #include <sstream>
 #include "json_reader.h"
 #include "request_handler.h" 
+#include <fstream>
  
 int main() {
     TransportCatalogue catalogue;
@@ -21,4 +22,15 @@ int main() {
 
     RequestHandler rh(catalogue, renderer, router);
     json_doc.ProcessRequests(stat_requests, rh);
+
+    std::ofstream svg_file("../../map.svg");
+    if (!svg_file) {
+        std::cerr << "Не удалось открыть файл для записи." << std::endl;
+        return 1;
+    }
+
+    rh.RenderMap().Render(svg_file);
+    svg_file.close();
+
+    rh.RenderMap().Render(std::cout);
 } 
