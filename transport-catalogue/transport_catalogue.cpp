@@ -39,7 +39,7 @@ const Stop* TransportCatalogue::FindStop(const std::string_view name) const {
 
 const BusInfo TransportCatalogue::GetBusInfo(const Bus* current_bus) const {
 	BusInfo bus_info;
-
+	bus_info.name = current_bus->name;
 	// Подсчёт количества оставновок stop_size
 	bus_info.count_stops = current_bus->stops.size();
 
